@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 354303035008340955}
   - component: {fileID: 7873506096302857671}
   - component: {fileID: 7084234978989222626}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Player(Cat)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,7 +35,8 @@ Transform:
   m_LocalPosition: {x: -4.34, y: -1.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 201251455014991607}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7284358799164695613
@@ -319,3 +320,37 @@ MonoBehaviour:
   moveSpeed: 7
   jumpSpeed: 15
   climbSpeed: 3
+  bullet: {fileID: 6470912817064660628, guid: 2f0c5f76016f4414d9263a68746a0e0d, type: 3}
+  gun: {fileID: 201251455014991607}
+  isAlive: 1
+--- !u!1 &8096944153580358598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 201251455014991607}
+  m_Layer: 11
+  m_Name: Gun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &201251455014991607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8096944153580358598}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.82, y: -0.281, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7301256540644673562}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

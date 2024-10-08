@@ -337,6 +337,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Death_9
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 0
+        width: 21
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbe5cf095ad602f46bd36a9ea94834cd
+      internalID: -593452210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -357,6 +378,7 @@ TextureImporter:
       Death_6: 1455377919
       Death_7: -1456061395
       Death_8: -1784183088
+      Death_9: -593452210
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
