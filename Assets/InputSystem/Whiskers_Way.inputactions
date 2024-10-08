@@ -1,5 +1,5 @@
 {
-    "name": "Whisker's Way",
+    "name": "Whiskers_Way",
     "maps": [
         {
             "name": "Player",
@@ -267,6 +267,28 @@
                     "name": "",
                     "id": "6926acfc-c3f8-472d-95fb-c8fc0d3cf56e",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "896029d7-40fa-4c05-86cd-4a672b4af1ec",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7effc7b6-bb73-4dba-bec2-304b59807130",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
