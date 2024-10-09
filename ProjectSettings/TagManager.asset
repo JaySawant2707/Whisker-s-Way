@@ -18,7 +18,7 @@ TagManager:
   - Background
   - Bullet
   - Player
-  - 
+  - Interactable
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Platform
     uniqueID: 878901839
+    locked: 0
+  - name: Interactables
+    uniqueID: 158874453
     locked: 0
   - name: Enemy
     uniqueID: 3673743641

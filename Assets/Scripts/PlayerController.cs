@@ -105,6 +105,7 @@ public class PlayerController : MonoBehaviour
         {
             isAlive = false;
             animator.SetTrigger("Dying");
+            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
     }
 }
