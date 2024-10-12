@@ -7,26 +7,37 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float climbSpeed = 3f;
+
     [Header("Projectile")]
     [SerializeField] GameObject bullet;
     [SerializeField] Transform gun;
+    [SerializeField] Transform bulletTarget;
 
+    [Header("Ground Cheak")]
+    [SerializeField] float castDistance;
+    [SerializeField] Vector2 boxSize;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] int totalJumps = 2;
+    public bool isFacingRight = true;
     bool isAlive = true;
     float playerGravity;
     bool isGrounded = false;
-    public bool isFacingRight = true;
+    bool canDoubleJump = false;
     Vector2 runInput;
     Rigidbody2D rb;
     Animator animator;
-    CapsuleCollider2D myFeetCollider;
-    BoxCollider2D myBodyCollider;
+    CapsuleCollider2D myBodyCollider;
+    BoxCollider2D myFeetCollider;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        myFeetCollider = GetComponent<CapsuleCollider2D>();
-        myBodyCollider = GetComponent<BoxCollider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
+    }
+    void Start()
+    {
         playerGravity = rb.gravityScale;
     }
 
@@ -35,24 +46,25 @@ public class PlayerController : MonoBehaviour
         if (!isAlive) return;
 
         GroundCheck();
-
         Run();
         Flip();
         ClimbLadder();
         Die();
+
+        if (totalJumps < 2 && isGrounded)
+        {
+            totalJumps = 2;
+        }
     }
 
     void OnMove(InputValue value)
     {
         runInput = value.Get<Vector2>();
-        Debug.Log(runInput);
     }
 
     void OnJump(InputValue value)
     {
         if (!isAlive) return;
-
-        if (!isGrounded) { return; }
 
         if (value.isPressed)
         {
@@ -62,7 +74,19 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        rb.velocity += new Vector2(0f, jumpSpeed);
+        if (totalJumps > 0 && isGrounded)
+        {
+            rb.velocity += Vector2.up * jumpSpeed;
+            totalJumps--;
+            canDoubleJump = true;
+        }
+        else if (canDoubleJump)
+        {
+            rb.velocity = Vector2.zero;
+            rb.velocity += Vector2.up * jumpSpeed;
+            totalJumps--;
+            canDoubleJump = false;
+        }
     }
 
     void OnFire(InputValue value)
@@ -79,14 +103,14 @@ public class PlayerController : MonoBehaviour
         Vector2 playerVelocity = new Vector2(runInput.x * moveSpeed, rb.velocity.y);
         rb.velocity = playerVelocity;
 
-        bool playerHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;    //Check if player is moving or not (horizontally)
-        animator.SetBool("isRunning", playerHorizontalSpeed);
+        bool isPlayerMovingHorizontally = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;    //Check if player is moving or not (horizontally)
+        animator.SetBool("isRunning", isPlayerMovingHorizontally);
 
     }
 
     void ClimbLadder()
     {
-        if (!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        if (!myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
         {
             rb.gravityScale = playerGravity;
             animator.SetBool("isClimbing", false);
@@ -95,8 +119,8 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f; //player will not fall from ladder when gravity is 0.
         rb.velocity = new Vector2(rb.velocity.x, runInput.y * climbSpeed);
 
-        bool playerVerticalSpeed = Mathf.Abs(rb.velocity.y) > Mathf.Epsilon;  //Check if player is moving or not (Vertically)
-        animator.SetBool("isClimbing", playerVerticalSpeed);
+        bool isPlayerMovingVertically = Mathf.Abs(rb.velocity.y) > Mathf.Epsilon;  //Check if player is moving or not (Vertically)
+        animator.SetBool("isClimbing", isPlayerMovingVertically);
     }
 
     void Flip()
@@ -120,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if (myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
         {
             isAlive = false;
             animator.SetTrigger("Dying");
@@ -130,6 +154,11 @@ public class PlayerController : MonoBehaviour
 
     void GroundCheck()
     {
-        isGrounded = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        isGrounded = Physics2D.BoxCast(transform.position, boxSize, 0f, -transform.up, castDistance, groundLayer);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position - transform.up * castDistance, boxSize);
     }
 }
