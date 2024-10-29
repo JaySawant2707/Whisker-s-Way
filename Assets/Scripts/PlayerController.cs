@@ -5,21 +5,20 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movements")]
     [SerializeField] float moveSpeed = 10f;
-    [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float climbSpeed = 3f;
 
-    [Header("Projectile")]
-    [SerializeField] GameObject bullet;
-    [SerializeField] Transform gun;
-    [SerializeField] Transform bulletTarget;
+    [Header("Jump Settings")]
+    [SerializeField] float jumpSpeed = 10f;
+    [SerializeField] float fallMultiplier = 5f;
+    [SerializeField] float cayoteTime = 0.3f;
+    [SerializeField] float cayoteTimeCounter;
 
     [Header("Ground Cheak")]
     [SerializeField] float castDistance;
     [SerializeField] Vector2 boxSize;
     [SerializeField] LayerMask groundLayer;
-    [SerializeField] int totalJumps = 2;
+
     public bool isFacingRight = true;
-    bool isAlive = true;
     float playerGravity;
     bool isGrounded = false;
     bool canDoubleJump = false;
@@ -28,6 +27,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
+    PlayerMortility playerMortility;
 
     void Awake()
     {
@@ -35,7 +35,9 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
+        playerMortility = FindObjectOfType<PlayerMortility>();
     }
+
     void Start()
     {
         playerGravity = rb.gravityScale;
@@ -43,59 +45,80 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive) return;
+        if (!playerMortility.isAlive) return;
 
         GroundCheck();
         Run();
         Flip();
+        CalculateJump();
         ClimbLadder();
-        Die();
+    }
 
-        if (totalJumps < 2 && isGrounded)
+    void CalculateJump()
+    {
+        //custom falling speed
+        if (rb.velocity.y < 0)
         {
-            totalJumps = 2;
+            rb.velocity += Physics2D.gravity * fallMultiplier * Time.deltaTime;
+        }
+
+        //cayote time counter
+        if (isGrounded)
+        {
+            myFeetCollider.offset = new Vector2(0, -0.6281902f);//move collider down on landed
+
+            cayoteTimeCounter = cayoteTime;
+
+            if (animator.GetBool("isJumping"))
+                animator.SetBool("isJumping", false);
+        }
+        else
+        {
+            cayoteTimeCounter -= Time.deltaTime;
+            
+            if (!animator.GetBool("isJumping"))
+                animator.SetBool("isJumping", true);
         }
     }
 
-    void OnMove(InputValue value)
+    void OnMove(InputValue value)//Method for new Input System
     {
         runInput = value.Get<Vector2>();
     }
 
-    void OnJump(InputValue value)
+    void OnJump(InputValue value)//Method for new Input System
     {
-        if (!isAlive) return;
+        if (!playerMortility.isAlive) return;
 
         if (value.isPressed)
         {
-            Jump();
+            ProcessJump();
         }
     }
 
-    void Jump()
+    void ProcessJump()
     {
-        if (totalJumps > 0 && isGrounded)
+        animator.SetBool("doubleJumping", false);
+        if (isGrounded || (!isGrounded && cayoteTimeCounter > Mathf.Epsilon))
         {
-            rb.velocity += Vector2.up * jumpSpeed;
-            totalJumps--;
+            DoJump();
             canDoubleJump = true;
         }
         else if (canDoubleJump)
         {
-            rb.velocity = Vector2.zero;
-            rb.velocity += Vector2.up * jumpSpeed;
-            totalJumps--;
+            DoJump();
+            animator.SetBool("doubleJumping", true);
             canDoubleJump = false;
         }
     }
 
-    void OnFire(InputValue value)
+    void DoJump()
     {
-        if (!isAlive) return;
-        if (value.isPressed)
-        {
-            Instantiate(bullet, gun.position, transform.rotation);
-        }
+        myFeetCollider.offset = new Vector2(0, 0.2f);//Move collider up while jumping
+        Debug.Log(myFeetCollider.offset);
+        rb.velocity = Vector2.zero;//this will avoide adding previous velocity into this jump
+        rb.velocity += Vector2.up * jumpSpeed;
+        cayoteTimeCounter = 0;
     }
 
     void Run()
@@ -139,16 +162,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             isFacingRight = true;
-        }
-    }
-
-    void Die()
-    {
-        if (myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
-        {
-            isAlive = false;
-            animator.SetTrigger("Dying");
-            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
     }
 

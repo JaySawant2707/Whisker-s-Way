@@ -16,10 +16,10 @@ TagManager:
   - Climbing
   - Enemy
   - Background
-  - Bullet
+  - Projectile
   - Player
   - Interactable
-  - 
+  - Hazards
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Platform
     uniqueID: 878901839
+    locked: 0
+  - name: Hazards
+    uniqueID: 3914262223
     locked: 0
   - name: Interactables
     uniqueID: 158874453
