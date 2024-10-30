@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float fallMultiplier = 5f;
     [SerializeField] float cayoteTime = 0.3f;
     [SerializeField] float cayoteTimeCounter;
+    [SerializeField] float colliderUpTime = 0.2f;
+    [SerializeField] float colliderUpCounter;
 
     [Header("Ground Cheak")]
     [SerializeField] float castDistance;
@@ -65,7 +67,8 @@ public class PlayerController : MonoBehaviour
         //cayote time counter
         if (isGrounded)
         {
-            myFeetCollider.offset = new Vector2(0, -0.6281902f);//move collider down on landed
+            if (colliderUpCounter < Mathf.Epsilon)
+            myFeetCollider.offset = new Vector2(0, -0.6281902f);//move collider down on landed..=*=This is hard coded=*=
 
             cayoteTimeCounter = cayoteTime;
 
@@ -79,6 +82,8 @@ public class PlayerController : MonoBehaviour
             if (!animator.GetBool("isJumping"))
                 animator.SetBool("isJumping", true);
         }
+
+        colliderUpCounter -= Time.deltaTime;
     }
 
     void OnMove(InputValue value)//Method for new Input System
@@ -114,8 +119,8 @@ public class PlayerController : MonoBehaviour
 
     void DoJump()
     {
-        myFeetCollider.offset = new Vector2(0, 0.2f);//Move collider up while jumping
-        Debug.Log(myFeetCollider.offset);
+        colliderUpCounter = colliderUpTime;
+        myFeetCollider.offset = new Vector2(0, -0.25f);//Move collider up while jumping..=*=This is hard coded=*=
         rb.velocity = Vector2.zero;//this will avoide adding previous velocity into this jump
         rb.velocity += Vector2.up * jumpSpeed;
         cayoteTimeCounter = 0;

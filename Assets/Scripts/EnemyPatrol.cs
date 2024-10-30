@@ -17,12 +17,12 @@ public class EnemyPatrol : MonoBehaviour
 
     void Update()
     {
-        rb.velocity = new Vector2(-moveSpeed, 0f);//Moves enemy to left
+        rb.velocity = new Vector2(-moveSpeed, rb.velocity.y);//Moves enemy to left
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Ground")
+        if (other.CompareTag("Ground"))
             FlipEnemy();
     }
 
