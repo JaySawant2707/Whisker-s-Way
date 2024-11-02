@@ -1,39 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerMortility : MonoBehaviour
 {
+    [SerializeField] public int playerLives = 3;
+
     public bool isAlive = true;
     Rigidbody2D rb;
     Animator animator;
-    CapsuleCollider2D myBodyCollider;
-    BoxCollider2D myFeetCollider;
     GameSession gameSession;
+    PlayerController playerController;
 
     void Awake()
     {
+        playerController = FindObjectOfType<PlayerController>();
         gameSession = FindObjectOfType<GameSession>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        myBodyCollider = GetComponent<CapsuleCollider2D>();
-        myFeetCollider = GetComponent<BoxCollider2D>();
     }
 
     void Update()
     {
-        if (myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if ( playerLives <= 0)
         {
-            isAlive = false;
-            animator.SetTrigger("Dying");
-            gameSession.ProcessPlayerDeath();
+            ProcessDeath();
         }
+    }
 
-        if (myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazards")))
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (!playerController.knockbacked)
         {
-            isAlive = false;
-            animator.SetTrigger("Dying");
-            gameSession.ProcessPlayerDeath();
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                animator.SetTrigger("Dying");
+
+                playerController.knockbackCounter = playerController.knockbackTime;
+
+                if (other.transform.position.x <= transform.position.x)
+                    playerController.knockbackFromRight = true;
+                else
+                    playerController.knockbackFromRight = false;
+
+                playerLives--;
+
+                gameSession.UpdateLives(playerLives);
+            }
+
+            if (other.gameObject.CompareTag("Hazards"))
+            {
+                animator.SetTrigger("Dying");
+
+                playerController.knockbackCounter = playerController.knockbackTime;
+
+                if (other.transform.position.x <= transform.position.x)
+                    playerController.knockbackFromRight = true;
+                else
+                    playerController.knockbackFromRight = false;
+
+                playerLives--;
+
+                gameSession.UpdateLives(playerLives);
+            }
         }
+    }
+
+    void ProcessDeath()
+    {
+        isAlive = false;
+        gameSession.ResetGameSession();
     }
 }

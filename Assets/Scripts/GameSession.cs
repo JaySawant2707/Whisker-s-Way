@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameSession : MonoBehaviour
 {
-    [SerializeField] int playerLives = 3;
     [SerializeField] TextMeshProUGUI playerLivesText;
     [SerializeField] TextMeshProUGUI scoreText;
     int score;
@@ -25,7 +24,7 @@ public class GameSession : MonoBehaviour
 
     void Start()
     {
-        playerLivesText.text = playerLives.ToString();
+        playerLivesText.text = FindObjectOfType<PlayerMortility>().playerLives.ToString();
         scoreText.text = score.ToString();
     }
 
@@ -35,29 +34,14 @@ public class GameSession : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    public void ProcessPlayerDeath()
+    public void UpdateLives(int lives)
     {
-        if (playerLives > 1)
-        {
-            TakeLife();
-        }
-        else
-        {
-            ResetGameSession();
-        }
+        playerLivesText.text = lives.ToString();
     }
 
-    void TakeLife()
+    public void ResetGameSession()
     {
-        playerLives--;
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex);
-        playerLivesText.text = playerLives.ToString();
-    }
-
-    void ResetGameSession()
-    {
-        FindObjectOfType<ScenePersist>().ResetScenePersist();
+        //FindObjectOfType<ScenePersist>().ResetScenePersist();
         SceneManager.LoadScene(0);//Need to change this is hard coded.
         Destroy(gameObject);
     }

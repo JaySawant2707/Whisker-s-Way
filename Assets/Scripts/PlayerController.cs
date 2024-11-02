@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movements")]
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float climbSpeed = 3f;
+    public bool isFacingRight = true;
 
     [Header("Jump Settings")]
     [SerializeField] float jumpSpeed = 10f;
@@ -15,14 +16,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float colliderUpTime = 0.2f;
     [SerializeField] float colliderUpCounter;
 
+    [Header("Knockback")]
+    [SerializeField] public float knockbackTime = 0;
+    [SerializeField] public float knockbackForce = 5f;
+    public bool knockbackFromRight;
+    public float knockbackCounter;
+    public bool knockbacked = false;
+
     [Header("Ground Cheak")]
     [SerializeField] float castDistance;
     [SerializeField] Vector2 boxSize;
     [SerializeField] LayerMask groundLayer;
+    public bool isGrounded = false;
 
-    public bool isFacingRight = true;
     float playerGravity;
-    bool isGrounded = false;
     bool canDoubleJump = false;
     Vector2 runInput;
     Rigidbody2D rb;
@@ -50,8 +57,23 @@ public class PlayerController : MonoBehaviour
         if (!playerMortility.isAlive) return;
 
         GroundCheck();
-        Run();
-        Flip();
+        if (knockbackCounter < Mathf.Epsilon)
+        {
+            knockbacked = false;
+            Run();
+            Flip();
+        }
+        else
+        {
+            knockbacked = true;
+            if (knockbackFromRight)
+                rb.velocity = new Vector2(knockbackForce, knockbackForce);
+            else
+                rb.velocity = new Vector2(-knockbackForce, knockbackForce);
+
+            knockbackCounter -= Time.deltaTime;
+        }
+        
         CalculateJump();
         ClimbLadder();
     }
@@ -68,7 +90,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             if (colliderUpCounter < Mathf.Epsilon)
-            myFeetCollider.offset = new Vector2(0, -0.6281902f);//move collider down on landed..=*=This is hard coded=*=
+                myFeetCollider.offset = new Vector2(0, -0.6281902f);//move collider down on landed..=*=This is hard coded=*=
 
             cayoteTimeCounter = cayoteTime;
 
@@ -78,7 +100,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             cayoteTimeCounter -= Time.deltaTime;
-            
+
             if (!animator.GetBool("isJumping"))
                 animator.SetBool("isJumping", true);
         }

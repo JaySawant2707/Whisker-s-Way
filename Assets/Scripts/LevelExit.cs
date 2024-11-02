@@ -6,9 +6,22 @@ using UnityEngine.SceneManagement;
 public class LevelExit : MonoBehaviour
 {
     [SerializeField] float exitDelay = 1f;
+    [SerializeField] public bool isOpened = false;
+    Animator animator;
+
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        animator.SetBool("isOpened", isOpened);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (isOpened)
         if (other.tag == "Player")
         {
             StartCoroutine("LoadNextLevel");

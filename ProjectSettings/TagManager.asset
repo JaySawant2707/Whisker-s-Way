@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Enemy
+  - Hazards
+  - Box
   layers:
   - Default
   - TransparentFX
@@ -44,6 +47,9 @@ TagManager:
     locked: 0
   - name: Water
     uniqueID: 2307727
+    locked: 0
+  - name: Platform bg
+    uniqueID: 1696980521
     locked: 0
   - name: Platform
     uniqueID: 878901839

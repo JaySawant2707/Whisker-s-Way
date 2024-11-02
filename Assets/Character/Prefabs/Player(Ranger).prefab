@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 3018227017694944531}
   - component: {fileID: 2319074593876204373}
   - component: {fileID: 7018900567305286875}
+  - component: {fileID: 6900877693052715087}
+  - component: {fileID: 6879930096483031506}
   m_Layer: 11
   m_Name: Player(Ranger)
   m_TagString: Player
@@ -203,7 +205,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.10445607}
-  m_Size: {x: 0.8, y: 1.4484022}
+  m_Size: {x: 0.6402601, y: 1.4484022}
   m_Direction: 0
 --- !u!61 &3018227017694944531
 BoxCollider2D:
@@ -237,7 +239,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.63077986}
+  m_Offset: {x: 0, y: -0.62819016}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.43, y: 0.35}
@@ -248,7 +250,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.8470609}
+  m_Size: {x: 0.6436157, y: 0.8418815}
   m_EdgeRadius: 0
 --- !u!114 &2319074593876204373
 MonoBehaviour:
@@ -350,15 +352,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   climbSpeed: 3
+  isFacingRight: 1
   jumpSpeed: 15
   fallMultiplier: 3
   cayoteTime: 0.15
   cayoteTimeCounter: 0
-  arrow: {fileID: 6903133119598838591, guid: 049656a96c3ae5243948a5218e943e94, type: 3}
-  bow: {fileID: 1002309276531254707}
+  colliderUpTime: 0.2
+  colliderUpCounter: 0
+  knockbackTime: 0.2
+  knockbackForce: 15
+  knockbackFromRight: 0
+  knockbackCounter: 0
+  knockbacked: 0
   castDistance: 1.2
-  boxSize: {x: 0.75, y: 0.5}
+  boxSize: {x: 0.64, y: 0.5}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  isFacingRight: 1
+  isGrounded: 0
+--- !u!114 &6900877693052715087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9076078069374277232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d4e80709cc82845bbd6ddfed35c4f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrow: {fileID: 3383962833532761788, guid: 11cb21f04b3e95f4caa0135a7884a672, type: 3}
+  bow: {fileID: 1002309276531254707}
+--- !u!114 &6879930096483031506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9076078069374277232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d41fa202f14a7c34d8c2a66cd5e9177c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLives: 5
+  isAlive: 1
