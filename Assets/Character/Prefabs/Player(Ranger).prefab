@@ -396,5 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41fa202f14a7c34d8c2a66cd5e9177c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLives: 5
+  playerLives: 3
+  spikeKnockbackForce: 20
   isAlive: 1

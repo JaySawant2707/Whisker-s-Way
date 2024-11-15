@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerMortility : MonoBehaviour
 {
     [SerializeField] public int playerLives = 3;
+    [SerializeField] float spikeKnockbackForce = 10f;
 
     public bool isAlive = true;
     Rigidbody2D rb;
@@ -45,23 +43,15 @@ public class PlayerMortility : MonoBehaviour
                     playerController.knockbackFromRight = false;
 
                 playerLives--;
-
                 gameSession.UpdateLives(playerLives);
             }
 
             if (other.gameObject.CompareTag("Hazards"))
             {
                 animator.SetTrigger("Dying");
-
-                playerController.knockbackCounter = playerController.knockbackTime;
-
-                if (other.transform.position.x <= transform.position.x)
-                    playerController.knockbackFromRight = true;
-                else
-                    playerController.knockbackFromRight = false;
+                rb.velocity = new Vector2(0f, spikeKnockbackForce);
 
                 playerLives--;
-
                 gameSession.UpdateLives(playerLives);
             }
         }

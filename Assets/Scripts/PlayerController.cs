@@ -68,8 +68,9 @@ public class PlayerController : MonoBehaviour
             knockbacked = true;
             if (knockbackFromRight)
                 rb.velocity = new Vector2(knockbackForce, knockbackForce);
-            else
+            else if (!knockbackFromRight)
                 rb.velocity = new Vector2(-knockbackForce, knockbackForce);
+                
 
             knockbackCounter -= Time.deltaTime;
         }
@@ -129,7 +130,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded || (!isGrounded && cayoteTimeCounter > Mathf.Epsilon))
         {
             DoJump();
-            canDoubleJump = true;
+            canDoubleJump = false;//change it to true to add double jump
         }
         else if (canDoubleJump)
         {

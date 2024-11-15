@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81e0fd43dd61d64bbafdf7e8e9c31b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitDelay: 1.5
+  exitDelay: 0.5
   isOpened: 0
 --- !u!95 &1849331838785149413
 Animator:
